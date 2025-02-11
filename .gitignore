@@ -1,0 +1,7 @@
+# pytest
+*pytest_report.html
+*.pytest_cache
+*__pycache__
+
+# virtual environment
+*.venv
