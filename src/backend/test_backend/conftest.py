@@ -1,3 +1,11 @@
+"""Pytest configuration file for the backend tests.
+
+TODO:
+    pytest_assertrepr_compare and pytest_assertion_pass hooks are not working.
+    The idea is the assertion details are logged when an assertion fails or passes in the HTML report.
+    This could be useful for debugging and understanding the test results.
+"""
+
 import logging
 import pytest
 import sys
