@@ -1,0 +1,20 @@
+[project]
+name = "Web-game"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "TommyUnreal", email = "none"},
+]
+dependencies = ["pytest>=8.3.4", "flask>=3.1.0", "flask-cors>=5.0.0", "requests>=2.32.3", "pytest-cov>=6.0.0", "pytest-html>=4.1.1"]
+requires-python = "==3.13"
+readme = "README.md"
+license = {text = "none"}
+
+
+[tool.pdm]
+distribution = false
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+]

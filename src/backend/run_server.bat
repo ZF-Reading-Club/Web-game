@@ -1,0 +1,1 @@
+python -m pdm run %~dp0/main.py
