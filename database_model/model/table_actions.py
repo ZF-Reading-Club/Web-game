@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String
 from .database_context import DatabaseContext  
   
   
-class ComponentsTable(DatabaseContext.Base):  
+class ActionsTable(DatabaseContext.Base):  
     __tablename__ = "actions"  
     id = Column(Integer, primary_key=True, nullable=True, autoincrement=True)  
     user_id = Column(Integer)  #link to previous table

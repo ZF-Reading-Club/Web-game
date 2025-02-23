@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String
 from .database_context import DatabaseContext  
   
   
-class ComponentsTable(DatabaseContext.Base):  
+class UserTable(DatabaseContext.Base):  
     __tablename__ = "user"  
     id = Column(Integer, primary_key=True, nullable=True, autoincrement=True)  
     name = Column(String)  
