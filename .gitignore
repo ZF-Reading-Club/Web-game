@@ -5,3 +5,7 @@
 
 # virtual environment
 *.venv
+
+# pdm file
+*.pdm-python
+/.pdm-python
