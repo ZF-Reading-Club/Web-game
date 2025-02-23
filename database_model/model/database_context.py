@@ -5,8 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 class DatabaseContext:
-    HOST= "127.0.0.1:8080" #have to change
-    DATABASE = "pgsql"
+    HOST= "127.0.0.1:5432" #have to change
+    DATABASE = "web_game"
     USER = "admin"
     PASSWORD = "admin"
     
