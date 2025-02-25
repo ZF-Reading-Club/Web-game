@@ -1,2 +1,2 @@
 pdm update
-pdm run python src\backend\main.py
+pdm run python app\main.py
