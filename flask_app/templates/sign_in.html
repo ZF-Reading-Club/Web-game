@@ -60,7 +60,7 @@
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
-        fetch("http://127.0.0.1:5000/api/login", {
+        fetch("http://127.0.0.1:5000/sign_in", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -75,7 +75,7 @@
             console.log(data);
             if (data.login) {
               alert(data.message);
-              window.location.href = "http://127.0.0.1:5000/api/test";
+              window.location.href = "http://127.0.0.1:5000/";
             } else {
               alert("Sign up failed!");
             }
