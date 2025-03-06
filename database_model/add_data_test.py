@@ -13,10 +13,10 @@ class AddDataTest:
         self.user_id = ""
        
     def set_test_data(self):
-        self.data["name"]="Kamila"    
+        self.data["name"]="Hoa"    
         self.data["money"]="123"    
-        self.data["territory"]="all"   
-        self.data["buildings"]="lots"
+        self.data["territory"]="none"   
+        self.data["buildings"]="shelter"
         print(self.data)
         
     def add_data_into_database(self):
@@ -33,9 +33,11 @@ class AddDataTest:
             session.flush()
             self.user_id = table.id
             session.commit() 
+        else:
+            print(is_in_database.first().id)    
         
     def is_in_database(self, session):
-        query = session.query(UserTable).first_by(**self.data)
+        query = session.query(UserTable).filter_by(**self.data)
         return query    
     
     def main(self):
