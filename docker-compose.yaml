@@ -21,8 +21,12 @@ services:
     environment: 
       PGADMIN_DEFAULT_EMAIL: admin@example.com 
       PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'  
     depends_on:
-      - postgres    
+      - postgres   
+    volumes:
+      - ./pgpass:/pgadmin4/pgpass
+      - ./pgadmin-servers.json:/pgadmin4/servers.json  # Prepopulate servers       
     
 
 volumes:
