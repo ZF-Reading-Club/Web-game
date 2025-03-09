@@ -1,16 +1,14 @@
-"""This is the routes file for the flask app. It contains all the routes for the app.
-"""
+"""This is the routes file for the flask app. It contains all the routes for the app."""
 
 from flask import jsonify, request, render_template, redirect, url_for
 
 from flask_app import app
 from flask_app.server.server_logic import health_check_response
+from flask_app.server.api.sign_in_logic import mock_user_login, authenticate_user
 
 
 from flask_jwt_extended import (
     jwt_required,
-    create_access_token,
-    set_access_cookies,
     get_jwt_identity,
     unset_jwt_cookies,
 )
@@ -80,19 +78,16 @@ def sign_in() -> dict:
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
-    if username:
-        if username == "ondra" and password == "123":
-            app.logger.info(f"Valid credentials for user {username}")
-            token = create_access_token(identity=username)
-            app.logger.info(f"Generated token for user {token}")
-            response = jsonify(login=True, message="Login successful")
-            app.logger.info(f"Generated response {response}")
-            set_access_cookies(response, token)
-            return response, 200
-        else:
-            return jsonify(success=False, message="Invalid credentials"), 401
-    else:
-        return jsonify(success=False, message="Missing credentials"), 400
+    app.logger.info(f"Received data: {data}, username: {username}, password: {password}")
+    if not username:
+        return jsonify(login=False, message="No username provided"), 400
+    if not password:
+        return jsonify(login=False, message="No password provided"), 400
+    valid_login: bool = mock_user_login(username, password)
+    if valid_login:
+        response = authenticate_user(username)
+        return response, 200
+    return jsonify(login=False, message="Invalid credentials"), 401
 
 
 @app.route("/logout", methods=["GET"])

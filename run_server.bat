@@ -1,2 +1,2 @@
 pdm update
-pdm run python app\main.py
+pdm run python run_server.py
