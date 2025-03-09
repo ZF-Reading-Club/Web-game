@@ -104,3 +104,15 @@ def sign_out() -> dict:
     app.logger.info("Unsetting access cookie.")
     unset_jwt_cookies(response)
     return response, 200
+
+
+@app.route("/resources", methods=["GET"])
+@jwt_required()
+def get_resources() -> dict:
+    """Test endpoint to get resources.
+
+    Returns:
+        dict: A response dictionary from health_check_response().
+    """
+    app.logger.info("Handling request to /resources")
+    return jsonify({"coins": 1000, "soldiers": 100, "explorers": 10}), 200

@@ -77,14 +77,14 @@
     <div class="container-fluid border border-primary">
       <div class="row justify-content-center ">
         <div class="col-md-4 border">🏰 Buildings
-          <div class="row">Building 1</div>
-          <div class="row">Building 2</div>
-          <div class="row">Building 3</div>
+          <div class="row" id="">Building 1</div>
+          <div class="row" id="">Building 2</div>
+          <div class="row" id="">Building 3</div>
         </div>
         <div class="col-md-4 border">💎 Resources
-          <div class="row">Resource 1</div>
-          <div class="row">Resource 2</div>
-          <div class="row">Resource 3</div>
+          <div class="row" id="coins">Coins: <span id="coinsAmount">0</span></div>
+          <div class="row" id="soldiers">Soldiers: <span id="soldiersAmount">0</span></div>
+          <div class="row" id="explorers">Explorers: <span id="explorersAmount">0</span></div>
         </div>
         <div class="col-md-4 border">✊ Actions
           <div class="row">
@@ -183,27 +183,51 @@
       });
     </script>
 
-    <!-- Logout -->
+    <!-- Get resources amounts-->
     <script>
-      document.getElementById("Logout").addEventListener("click", function(e) {
-        e.preventDefault();
-      
-        // Fetch the server health-check JSON data
-        fetch("http://127.0.0.1:5000/logout", {
-          method: "GET",
-        })
-          .then(response => {
-            if (response.ok) {
-              console.log("Logout successful");
-              window.location.href = "http://127.0.0.1:5000";
-            } else {
-              console.log("Logout failed");
-            }
+        // Fetch the server resources JSON data for logged user
+        fetch("http://127.0.0.1:5000/resources")
+          .then(response => response.json())
+          .then(data => {
+             // Update the toast content with the server response
+            document.getElementById("coinsAmount").textContent = data.coins;
+            document.getElementById("soldiersAmount").textContent = data.soldiers;
+            document.getElementById("explorersAmount").textContent = data.explorers;
           })
           .catch(error => {
-             console.error("Error while logging out:", error);
+             console.error("Error fetching resources data:", error);
           });
-      });
+    </script>
+
+    <!-- Logout -->
+    <script>
+    function getResources() {
+        // Fetch the server resources JSON data for logged user
+      document.getElementById("Logout").addEventListener("click", function(e) {
+          e.preventDefault();
+
+          // Fetch the server health-check JSON data
+          fetch("http://127.0.0.1:5000/logout", {
+            method: "GET",
+          })
+            .then(response => {
+              if (response.ok) {
+                console.log("Logout successful");
+                window.location.href = "http://127.0.0.1:5000";
+              } else {
+                console.log("Logout failed");
+              }
+            })
+            .catch(error => {
+               console.error("Error while logging out:", error);
+            });
+        })};
+    </script>
+
+    <!-- On-page-load actions -->
+    <script>
+      // On page load, fetch the server health-check JSON data
+      document.addEventListener("DOMContentLoaded", getResources())
     </script>
 
 </body>
