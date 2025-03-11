@@ -1,7 +1,6 @@
 import logging
 
-from flask import redirect, url_for, request
-from werkzeug import Response
+from flask import redirect, url_for, request, Response
 from flask_app import jwt
 
 logger = logging.getLogger(__name__)

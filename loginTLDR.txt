@@ -1,0 +1,22 @@
+
+[ Client ]  --->    [ POST /login ] --->    [ Server ]
+                    (credentials)
+
+
+
+
+[ Server ]  --->    [Validate credentials]   --->  [ Set-Cookie: access_token_cookie=JWT ]  --->    [ Send response ]   --->    [ Client ]
+                        (with database)                     (flask_jwt_extended module)                (attach Cookie)
+
+
+
+
+[ Client ]  --->    [Stores cookie in browser]  --->    [ Subsequent requests ] --->    [ Server - protected API endpoint ]
+                                                    (include cookie with token in request)
+
+
+
+
+[ Server ]  --->    [Validate token]  --->  [if valid, return protected data]   --->    [ Client ]  
+                     (jwt_required)      (optionally extract identity from token)
+                                            

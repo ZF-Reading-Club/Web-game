@@ -68,7 +68,7 @@ def health_check() -> dict:
 
 
 @app.route("/sign_in", methods=["POST"])
-def sign_in() -> dict:
+def sign_in():
     """Test endpoint to sign in.
 
     Returns:
