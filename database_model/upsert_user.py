@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 logging.basicConfig(level=logging.DEBUG)
 
-class AddDataToDatabase:
+class UpsertUser:
     def __init__(self, name, money, territory, buildings) -> None:
         """
         Initializes the instance with default values.
@@ -117,10 +117,8 @@ class AddDataToDatabase:
         query = session.query(UserTable).filter_by(name=self.data["name"])
         return query    
     
-    def main(self) -> None:
+    def upsert_user(self) -> None:
         self.set_test_data()
         self.add_data_into_database()
         
-if __name__ == "__main__":
-    AddDataToDatabase("Hoza", "10", "10", "10").main()
         

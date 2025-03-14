@@ -27,10 +27,9 @@ class DeleteUser():
                             f"\n Data: {user_data.first().__dict__}")
             user_data.delete()
             self.session.commit()
-            
         else: 
             logging.info(f"User {self.name} is not in database")
-            return None
+
         
 if __name__ == "__main__":
     DeleteUser("Hoza").delete_user()
