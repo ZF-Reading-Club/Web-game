@@ -1,3 +1,6 @@
+import logging
+import os
+import sys
 from model.table_user import UserTable
 from model.database_context import DatabaseContext
 
@@ -21,8 +24,8 @@ class GetUser():
             logging.info(f"User {self.name} is not in database")
             return None
         else:
-            logging.info(f"User {self.name} is already in database with ID {is_in_database.first().id}.")
-            data = is_in_database.first().__dict__
+            logging.info(f"User {self.name} is already in database with ID {user_log.id}.")
+            data = user_log.__dict__
             data.pop('_sa_instance_state', None) 
             return data
 
