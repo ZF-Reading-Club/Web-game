@@ -6,6 +6,9 @@
 # virtual environment
 *.venv
 
+#local setting
+.vscode
+
 # pdm file
 *.pdm-python
 /.pdm-python
