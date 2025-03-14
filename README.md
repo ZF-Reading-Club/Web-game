@@ -16,5 +16,5 @@ Run docker database localy:
 Add credentials to the postgre 
 `echo "postgres:5432:*:admin:admin" > pgpass`
 
-Change permission tp pgpass
+Change permission to pgpass
 `chmod 600 pgpass`
