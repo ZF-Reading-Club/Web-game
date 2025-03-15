@@ -9,8 +9,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 logging.basicConfig(level=logging.DEBUG)
 
-class UpsertUser:
-    def __init__(self, name, money, territory, buildings) -> None:
+class UserMaintanence:
+    def __init__(self, name:str, money:str ="", territory:str="", buildings:str ="") -> None:
         """
         Initializes the instance with default values.
         Attributes:
@@ -24,9 +24,12 @@ class UpsertUser:
         self.money = money
         self.territory = territory
         self.buildings = buildings
-        
-       
-    def set_test_data(self) -> None:
+        database_context = DatabaseContext() 
+        database_context.initialize_database()
+        self.session = database_context.session
+     
+    @staticmethod     
+    def _set_user_data(self) -> None:
         """
         Sets test data for the instance.
         This method populates the `data` attribute with predefined test values:
@@ -43,7 +46,8 @@ class UpsertUser:
         self._check_data(self.data)
         logging.info(self.data)
     
-    def update_data(self, data) -> dict:
+    @staticmethod
+    def _update_data(self, data) -> dict:
         """
         Updates the data attribute with the given data.
         Args:
@@ -73,8 +77,13 @@ class UpsertUser:
         if int(data["buildings"]) < 0:
             sys.exit(1)
 
+    @staticmethod    
+    def _get_user_database_log(self):
+        
+        query = self.session.query(UserTable).filter_by(name=self.name)
+        return query
           
-    def add_data_into_database(self) -> None:
+    def upser_user_data(self) -> None:
         """
         Adds data into the database.
         This method initializes the database context, creates a session, and attempts to add a new user record.
@@ -84,41 +93,42 @@ class UpsertUser:
         Returns:
             None
         """
-        
-        database_context = DatabaseContext() 
-        database_context.initialize_database()
-        session = database_context.session
-        
+        self._set_user_data()        
         table =  UserTable(**self.data)
-        is_in_database = self.is_in_database(session)
+        user_in_database = self._get_user_database_log()
         
-        if not is_in_database.first():
-            session.add(table)
-            session.flush()
+        if not user_in_database.first():
+            self.session.add(table)
+            self.session.flush()
             self.user_id = table.id
-            session.commit() 
+            self.session.commit() 
         else:
-            logging.info(f"User {self.data} is already in database with ID {is_in_database.first().id} and its status will be changed")
-            data = is_in_database.first().__dict__
+            logging.info(f"User {self.data} is already in database with ID {user_in_database.first().id} and its status will be changed")
+            data = user_in_database.first().__dict__
             data.pop('_sa_instance_state', None) 
             data = self.update_data(data)   
-            session.query(UserTable).filter_by(id=is_in_database.first().id).update(data)
-            session.flush()
-            session.commit()
+            self.session.query(UserTable).filter_by(id=user_in_database.first().id).update(data)
+            self.session.flush()
+            self.session.commit()
         
-    def is_in_database(self, session):
-        """
-        Checks if the current data exists in the UserTable of the database.
-        Args:
-            session (Session): The SQLAlchemy session used to query the database.
-        Returns:
-            Query: The SQLAlchemy query object that can be used to check if the data exists in the database.
-        """
-        query = session.query(UserTable).filter_by(name=self.data["name"])
-        return query    
-    
-    def upsert_user(self) -> None:
-        self.set_test_data()
-        self.add_data_into_database()
-        
-        
+    def get_user_data(self):
+        user_log = self._get_user_database_log().first()
+        if not user_log:
+            logging.info(f"User {self.name} is not in database")
+            return None
+        else:
+            logging.info(f"User {self.name} is already in database with ID {user_log.id}.")
+            data = user_log.__dict__
+            data.pop('_sa_instance_state', None) 
+            return data
+
+
+    def delete_user(self):
+        user_data = self._get_user_database_log()
+        if user_data.first():
+            logging.warning(f"User {self.name} is going to be deleted from database." 
+                            f"\n Data: {user_data.first().__dict__}")
+            user_data.delete()
+            self.session.commit()
+        else: 
+            logging.info(f"User {self.name} is not in database")
