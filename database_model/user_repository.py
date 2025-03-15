@@ -9,13 +9,23 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 logging.basicConfig(level=logging.DEBUG)
 
-class UserMaintanence:
+class UserRepository:
     def __init__(self, name:str, money:str ="", territory:str="", buildings:str ="") -> None:
         """
-        Initializes the instance with default values.
+        Initializes a new instance of the user repository.
+        Args:
+            name (str): The name of the user.
+            money (str, optional): The amount of money the user has. Defaults to an empty string.
+            territory (str, optional): The territory owned by the user. Defaults to an empty string.
+            buildings (str, optional): The buildings owned by the user. Defaults to an empty string.
         Attributes:
-            data (dict): A dictionary to store data.
-            user_id (str): A string to store the user ID.
+            data (dict): A dictionary to store user data.
+            user_id (str): The unique identifier for the user.
+            name (str): The name of the user.
+            money (str): The amount of money the user has.
+            territory (str): The territory owned by the user.
+            buildings (str): The buildings owned by the user.
+            session (Session): The database session for interacting with the database.
         """
         
         self.data = {}
@@ -79,7 +89,13 @@ class UserMaintanence:
 
     @staticmethod    
     def _get_user_database_log(self):
-        
+        """ 
+        Retrieves the database log for the user with the specified name.
+
+        Returns:
+            sqlalchemy.orm.query.Query: A query object to fetch the user data from the UserTable.
+        """
+
         query = self.session.query(UserTable).filter_by(name=self.name)
         return query
           
@@ -112,6 +128,13 @@ class UserMaintanence:
             self.session.commit()
         
     def get_user_data(self):
+        """
+        Retrieves user data from the database.
+        This method fetches the first user log entry from the user database log.
+        Returns:
+            dict: A dictionary containing user data if the user is found in the database, otherwise None.
+        """
+        
         user_log = self._get_user_database_log().first()
         if not user_log:
             logging.info(f"User {self.name} is not in database")
@@ -124,6 +147,11 @@ class UserMaintanence:
 
 
     def delete_user(self):
+        """
+        Deletes a user from the database.
+        This method retrieves the user data from the database log. If the user exists,
+        """
+        
         user_data = self._get_user_database_log()
         if user_data.first():
             logging.warning(f"User {self.name} is going to be deleted from database." 
