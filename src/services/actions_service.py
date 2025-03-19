@@ -1,6 +1,6 @@
 import logging
-from actions_repository import ActionsRepository
 
+from src.repositories.actions_repository import ActionsRepository
 
 class ActionsManagement:
 

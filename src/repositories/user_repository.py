@@ -1,11 +1,8 @@
-import os
 import sys
 import logging
 
-from model.table_user import UserTable
-from model.database_context import DatabaseContext
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from models.users import UserTable
+from models.database_context import DatabaseContext
 
 logging.basicConfig(level=logging.DEBUG)
 

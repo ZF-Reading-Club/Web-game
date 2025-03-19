@@ -1,12 +1,11 @@
 import logging
 import os
 import sys
-from model.database_context import DatabaseContext
-from model.table_actions import ActionsTable
+from src.models.database_context import DatabaseContext
+from src.models.actions import ActionsTable
 
 logging.basicConfig(level=logging.DEBUG)
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 class ActionsRepository:

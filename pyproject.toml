@@ -3,10 +3,10 @@ name = "Web-game"
 version = "0.1.0"
 description = "Default template for PDM package"
 authors = [
-    {name = "TommyUnreal", email = "none"},
+    {name = "KamilaHant", email = "kamila.hantova@gmail.com"},
 ]
-dependencies = ["pytest>=8.3.4", "flask>=3.1.0", "flask-cors>=5.0.0", "requests>=2.32.3", "pytest-cov>=6.0.0", "pytest-html>=4.1.1", "Flask-JWT-Extended>=4.7.1"]
-requires-python = "==3.13"
+dependencies = ["pytest>=8.3.4", "flask>=3.1.0", "flask-cors>=5.0.0", "requests>=2.32.3", "pytest-cov>=6.0.0", "pytest-html>=4.1.1"]
+requires-python = ">3.10"
 readme = "README.md"
 license = {text = "none"}
 
