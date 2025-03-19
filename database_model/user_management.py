@@ -15,13 +15,13 @@ class UserManagenment:
     def delete_user(self, username):
         UserRepository(username).delete_user()
             
-    def get_user_data(self, username):
+    def get_user(self, username):
         user_data = UserRepository(username).get_user_data()
         if not user_data:
             return None
         return user_data
 
-    def check_user_exit(self, username):
+    def check_user_exist(self, username):
         """Check user existance in database."""
         user_data = UserRepository(username).get_user_data()
         if not user_data:
