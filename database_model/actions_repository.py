@@ -11,6 +11,15 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 class ActionsRepository:
     def __init__(self, user_id: str, type=None, cooperation=None, against=None) -> None:
+        """
+        Initializes an instance of the actions repository.
+        Args:
+            user_id (str): The unique identifier for the user.
+            type (optional): The type of action. Defaults to None.
+            cooperation (optional): The cooperation parameter. Defaults to None.
+            against (optional): The against parameter. Defaults to None.
+        """
+
         self.actions = {}
         self.action_id = ""
         self.user_id = user_id
@@ -22,6 +31,9 @@ class ActionsRepository:
         self.session = database_context.session
 
     def _set_actions_data(self) -> None:
+        """
+        Update the `actions` dictionary with user data.
+        """
         self.actions["user_id"] = self.user_id
         self.actions["type"] = self.type
         self.actions["cooperation"] = self.cooperation
@@ -30,11 +42,23 @@ class ActionsRepository:
 
     @staticmethod
     def _check_data(data) -> None:
+        """
+        Validates the presence of 'user_id' and 'type' in the data. Logs an error and exits if missing.
+        """
         if not data["user_id"] or not data["type"]:
             logging.error("Data is missing.")
             sys.exit(1)
 
-    def _get_user_database_log(self, user_id=None):
+    def _get_user_database_log(self, user_id=None) -> ActionsTable:
+        """
+        Retrieves the user database log from the ActionsTable.
+        Args:
+            user_id (int, optional): The ID of the user whose log is to be retrieved.
+                If not provided, the method will use the instance's `user_id` and `type` attributes.
+        Returns:
+            ActionsTable: A query object representing the filtered results from the ActionsTable.
+        """
+
         logging.info(f"User id: {user_id}")
         if user_id is not None:
             query = self.session.query(ActionsTable).filter_by(user_id=user_id)
@@ -44,10 +68,15 @@ class ActionsRepository:
             )
         return query
 
-    def set_actions_data(self) -> None:
+    def set_actions_data(self) -> str:
+        """
+        Sets the actions data in the database.
+        Returns:
+            str: The ID of the actions data.
+        """
         self._set_actions_data()
         table = ActionsTable(**self.actions)
-        logging.info("User data: %s", self.actions)
+        logging.info(f"User data: {self.actions}")
         actions_log_in_database = self._get_user_database_log()
         if actions_log_in_database.first() is not None:
             logging.info("User already exists in the database.")
@@ -58,14 +87,24 @@ class ActionsRepository:
             self.session.flush()
             return table.id
 
-    def get_user_actions_data(self) -> dict:
+    def get_user_actions_data(self) -> ActionsTable | None:
+        """
+        Retrieves the actions data from the database.
+        Returns:
+            ActionsTable: The actions data.
+        """
         actions_log_in_database = self._get_user_database_log(self.user_id)
         logging.info(f"User data: {actions_log_in_database.first()}")
         if actions_log_in_database.first() is not None:
             return actions_log_in_database
         return None
 
-    def delete_all_user_actions(self) -> None:
+    def delete_all_user_actions(self) -> bool:
+        """
+        Deletes all actions of a user from the database.
+        Returns:
+            bool: True if the user's actions are deleted, False otherwise.
+        """
         actions_log_in_database = self._get_user_database_log(self.user_id)
         if actions_log_in_database.first():
             actions_log_in_database.delete()

@@ -5,12 +5,15 @@ import logging
 from model.table_user import UserTable
 from model.database_context import DatabaseContext
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 class UserRepository:
-    def __init__(self, name:str, money:str ="", territory:str="", buildings:str ="") -> None:
+    def __init__(
+        self, name: str, money: str = "", territory: str = "", buildings: str = ""
+    ) -> None:
         """
         Initializes a new instance of the user repository.
         Args:
@@ -27,18 +30,18 @@ class UserRepository:
             buildings (str): The buildings owned by the user.
             session (Session): The database session for interacting with the database.
         """
-        
+
         self.data = {}
         self.user_id = ""
         self.name = name
         self.money = money
         self.territory = territory
         self.buildings = buildings
-        database_context = DatabaseContext() 
+        database_context = DatabaseContext()
         database_context.initialize_database()
         self.session = database_context.session
-     
-    @staticmethod     
+
+    @staticmethod
     def _set_user_data(self) -> None:
         """
         Sets test data for the instance.
@@ -48,14 +51,14 @@ class UserRepository:
         - territory
         - buildings
         """
-        
-        self.data["name"]= self.name  
-        self.data["money"]= self.money
-        self.data["territory"]= self.territory  
-        self.data["buildings"]= self.buildings
+
+        self.data["name"] = self.name
+        self.data["money"] = self.money
+        self.data["territory"] = self.territory
+        self.data["buildings"] = self.buildings
         self._check_data(self.data)
         logging.info(self.data)
-    
+
     @staticmethod
     def _update_data(self, data) -> dict:
         """
@@ -70,7 +73,7 @@ class UserRepository:
         data["buildings"] = int(data["buildings"]) + int(self.money)
         self._check_data(data)
         return data
-    
+
     @staticmethod
     def _check_data(data):
         """
@@ -78,7 +81,12 @@ class UserRepository:
         Args:
             data (dict): A dictionary containing user data.
         """
-        if not data["name"] or not data["money"] or not data["territory"] or not data["buildings"]:
+        if (
+            not data["name"]
+            or not data["money"]
+            or not data["territory"]
+            or not data["buildings"]
+        ):
             sys.exit(1)
         if int(data["money"]) < 0:
             sys.exit(1)
@@ -87,9 +95,9 @@ class UserRepository:
         if int(data["buildings"]) < 0:
             sys.exit(1)
 
-    @staticmethod    
+    @staticmethod
     def _get_user_database_log(self):
-        """ 
+        """
         Retrieves the database log for the user with the specified name.
 
         Returns:
@@ -98,7 +106,7 @@ class UserRepository:
 
         query = self.session.query(UserTable).filter_by(name=self.name)
         return query
-          
+
     def upser_user_data(self) -> None:
         """
         Adds data into the database.
@@ -109,24 +117,28 @@ class UserRepository:
         Returns:
             None
         """
-        self._set_user_data()        
-        table =  UserTable(**self.data)
+        self._set_user_data()
+        table = UserTable(**self.data)
         user_in_database = self._get_user_database_log()
-        
+
         if not user_in_database.first():
             self.session.add(table)
             self.session.flush()
             self.user_id = table.id
-            self.session.commit() 
+            self.session.commit()
         else:
-            logging.info(f"User {self.data} is already in database with ID {user_in_database.first().id} and its status will be changed")
+            logging.info(
+                f"User {self.data} is already in database with ID {user_in_database.first().id} and its status will be changed"
+            )
             data = user_in_database.first().__dict__
-            data.pop('_sa_instance_state', None) 
-            data = self.update_data(data)   
-            self.session.query(UserTable).filter_by(id=user_in_database.first().id).update(data)
+            data.pop("_sa_instance_state", None)
+            data = self.update_data(data)
+            self.session.query(UserTable).filter_by(
+                id=user_in_database.first().id
+            ).update(data)
             self.session.flush()
             self.session.commit()
-        
+
     def get_user_data(self):
         """
         Retrieves user data from the database.
@@ -134,29 +146,32 @@ class UserRepository:
         Returns:
             dict: A dictionary containing user data if the user is found in the database, otherwise None.
         """
-        
+
         user_log = self._get_user_database_log().first()
         if not user_log:
             logging.info(f"User {self.name} is not in database")
             return None
         else:
-            logging.info(f"User {self.name} is already in database with ID {user_log.id}.")
+            logging.info(
+                f"User {self.name} is already in database with ID {user_log.id}."
+            )
             data = user_log.__dict__
-            data.pop('_sa_instance_state', None) 
+            data.pop("_sa_instance_state", None)
             return data
-
 
     def delete_user(self):
         """
         Deletes a user from the database.
         This method retrieves the user data from the database log. If the user exists,
         """
-        
+
         user_data = self._get_user_database_log()
         if user_data.first():
-            logging.warning(f"User {self.name} is going to be deleted from database." 
-                            f"\n Data: {user_data.first().__dict__}")
+            logging.warning(
+                f"User {self.name} is going to be deleted from database."
+                f"\n Data: {user_data.first().__dict__}"
+            )
             user_data.delete()
             self.session.commit()
-        else: 
+        else:
             logging.info(f"User {self.name} is not in database")
