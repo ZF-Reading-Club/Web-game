@@ -9,4 +9,5 @@ class ActionsTable(DatabaseContext.Base):
     type = Column(String)  
     cooperation = Column(String)  
     against = Column(String)  
+    building_type = Column(String)
     
