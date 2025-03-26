@@ -4,11 +4,11 @@ from src.repositories.actions_repository import ActionsRepository
 
 class ActionsManagement:
 
-    def add_action(user_id, type, cooperation, against):
+    def add_action(user_id, building_type, type, cooperation, against):
         """Adds a new action to the database."""
         
         action_id = ActionsRepository(
-            user_id, type, cooperation, against
+            user_id=user_id, building_type=building_type, type=type, cooperation=cooperation, against=against
         ).set_actions_data()
 
     def get_actions(user_id):
