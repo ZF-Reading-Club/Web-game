@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class ActionsRepository:
-    def __init__(self, user_id: str, type=None, cooperation=None, against=None) -> None:
+    def __init__(self, user_id: str, building_type = None ,type=None, cooperation=None, against=None) -> None:
         """
         Initializes an instance of the actions repository.
         Args:
@@ -25,6 +25,7 @@ class ActionsRepository:
         self.type = type
         self.cooperation = cooperation
         self.against = against
+        self.building_type = building_type
         database_context = DatabaseContext()
         database_context.initialize_database()
         self.session = database_context.session
@@ -37,6 +38,7 @@ class ActionsRepository:
         self.actions["type"] = self.type
         self.actions["cooperation"] = self.cooperation
         self.actions["against"] = self.against
+        self.actions["building_type"] = self.building_type
         self._check_data(self.actions)
 
     @staticmethod
