@@ -1,7 +1,7 @@
 import sys
 import logging
 
-import bcrypt
+from argon2 import PasswordHasher
 
 from models.users import UserTable
 from models.database_context import DatabaseContext
@@ -30,7 +30,7 @@ class UserRepository:
             buildings (str): The buildings owned by the user.
             session (Session): The database session for interacting with the database.
         """
-
+        self.hasher = PasswordHasher()
         self.data = {}
         self.user_id = ""
         self.name = name
@@ -52,27 +52,24 @@ class UserRepository:
         - territory
         - buildings
         """
-
+        
         self.data["name"] = self.name
-        self.data["password"] = self._encode_psw(self.password)
+        self.data["password"] = self._encode_psw()
         self.data["money"] = self.money
         self.data["territory"] = self.territory
         self.data["buildings"] = self.buildings
         self._check_data(self.data)
         logging.info(self.data)
 
-    @staticmethod
-    def _encode_psw(password: str) -> str:
+
+    def _encode_psw(self) -> str:
         """
         Encodes the password using bcrypt hashing algorithm.
-        Args:
-            password (str): The password to be encoded.
         Returns:
             str: The encoded password.
         """
-        psw_encoded = password.encode()  # always encode to bytes
-        hashed = bcrypt.hashpw(psw_encoded, bcrypt.gensalt()) 
-        return hashed.decode()  # decode to string    
+        psw_hashed = self.hasher.hash(self.password)
+        return psw_hashed   
 
 
     @staticmethod
@@ -210,7 +207,10 @@ class UserRepository:
             )
             data = user_log.__dict__
             data.pop("_sa_instance_state", None)
-            if bcrypt.checkpw(self.password.encode(), data["password"].encode()):
+            
+            try: 
+                self.hasher.verify(data["password"], self.password)
                 return True
-            else:
+            except Exception as e:
+                logging.error(f"Error verifying password: {e}")
                 return False
