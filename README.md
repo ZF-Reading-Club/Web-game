@@ -18,3 +18,10 @@ Add credentials to the postgre
 
 Change permission to pgpass
 `chmod 600 pgpass`
+
+
+## API requests - where to write
+
+New api requests: 
+
+`flask_app/server/api/routes.py`
